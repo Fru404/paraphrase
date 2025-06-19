@@ -2,5 +2,5 @@ fastapi==0.95.2
 uvicorn[standard]==0.23.2
 nest_asyncio==1.5.6
 pyngrok==5.2.1
-torch==2.0.1
+torch==2.7.1
 transformers==4.30.2
