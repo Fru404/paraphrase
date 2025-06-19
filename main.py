@@ -64,7 +64,4 @@ async def paraphrase(request: ParaphraseRequest, api_key: str = Depends(verify_a
 
     return {"paraphrases": generated_sentence}
 
-# Run the app with uvicorn
-# For Colab/Jupyter, use this instead of CLI:
-import uvicorn
-uvicorn.run(app, host="0.0.0.0", port=8000)
+
