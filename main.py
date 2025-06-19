@@ -1,21 +1,10 @@
 # Import necessary modules
-import nest_asyncio
-from pyngrok import ngrok
-
 from fastapi import FastAPI, Header, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import torch
 from transformers import BartForConditionalGeneration, BartTokenizer
-
-# Apply asyncio patch for Colab/interactive environments
-nest_asyncio.apply()
-
-# Set up ngrok
-ngrok.set_auth_token("2IWN0C7fuFHe14Ir6w0rhDSZ9m8_6jukyLciKVJfqXpTcinjU")
-public_url = ngrok.connect(8000)  # FastAPI default port is 8000
-print(f"Public URL: {public_url}")
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -63,5 +52,6 @@ async def paraphrase(request: ParaphraseRequest, api_key: str = Depends(verify_a
     generated_sentence = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
 
     return {"paraphrases": generated_sentence}
+
 
 
