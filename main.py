@@ -1,42 +1,56 @@
-# Import necessary modules
 from fastapi import FastAPI, Header, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import random
+import os
+
+import google.generativeai as genai
+
+# Load API key from environment
+API_KEY = os.getenv("GOOGLE_API_KEY")
+if not API_KEY:
+    raise RuntimeError("GOOGLE_API_KEY environment variable not set.")
+
+genai.configure(api_key=API_KEY)
 
 # Initialize FastAPI app
 app = FastAPI()
 
-# Allow CORS (optional)
+# Allow CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or restrict to specific domains
+    allow_origins=["*"],  # Or restrict
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# API key for authentication
-API_KEY = "Secret"
+#Custom header API key for user authentication
+MY_API_KEY = "Secret"
 
 def verify_api_key(x_api_key: str = Header(...)):
-    if x_api_key != API_KEY:
+    if x_api_key != MY_API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-# Request body model
+#  Pydantic request model
 class ParaphraseRequest(BaseModel):
     sentence: str
 
+# Endpoint using Gemini 2.5 Flash
 @app.post("/paraphrase")
 async def paraphrase(request: ParaphraseRequest, api_key: str = Depends(verify_api_key)):
     input_sentence = request.sentence.strip()
     if not input_sentence:
         raise HTTPException(status_code=400, detail="No input provided.")
 
-    # 🌀 Very simple text mixing: shuffle words
-    words = input_sentence.split()
-    if len(words) > 1:
-        random.shuffle(words)
-    mixed_sentence = " ".join(words)
+    # Create a Gemini model client
+    model = genai.GenerativeModel("gemini-2.5-flash")
 
-    return {"paraphrases": [mixed_sentence]}
+    # Use Gemini to paraphrase
+    response = model.generate_content(
+        f"Paraphrase this sentence simply and correctly: \"{input_sentence}\""
+    )
+
+    # Extract text from Gemini response
+    paraphrased = response.text.strip() if hasattr(response, 'text') else str(response)
+
+    return {"paraphrases": [paraphrased]}
