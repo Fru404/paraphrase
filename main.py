@@ -47,7 +47,7 @@ async def paraphrase(request: ParaphraseRequest, api_key: str = Depends(verify_a
 
     # Use Gemini to paraphrase
     response = model.generate_content(
-    f"Paraphrase this sentence into clear, simple English. Just give the single paraphrased sentence only, no explanation, no list: \"{input_sentence}\""
+    f"Please. Humanize this sentence clearly, do not over change the sentence structure. Just give the single paraphrased sentence only, no explanation, no list: \"{input_sentence}\""
 )
 
 
