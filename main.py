@@ -15,14 +15,18 @@ genai.configure(api_key=API_KEY)
 # Initialize FastAPI app
 app = FastAPI()
 
-# Allow CORS
+origins = [
+    "https://baselaunch-site.web.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://baselaunch-site.web.app/"],  # Or restrict
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 #Custom header API key for user authentication
 MY_API_KEY = "Secret"
