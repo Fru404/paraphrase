@@ -18,7 +18,7 @@ app = FastAPI()
 # Allow CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or restrict
+    allow_origins=["https://baselaunch-site.web.app/"],  # Or restrict
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
